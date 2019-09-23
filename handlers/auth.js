@@ -2,17 +2,19 @@ const db = require("../models"),
     jwt = require("jsonwebtoken");
 
 
-// find user
-// check sent password 
-// sign in or redirect
+// --------------------------------------------- sign in ------------------------------------ //
 exports.signin = async function(req, res, next) {
-    // finding a user
+    // finding a user with email passed in from req.body
     try {
       let user = await db.User.findOne({
         email: req.body.email
       });
+      // destructure some of the found user's data for later
       let { id, username, profileImageUrl } = user;
+      // compare entered password with user's hashed password
       let isMatch = await user.comparePassword(req.body.password);
+      // if password is correct
+      // create a json web token with the user's data & .env file
       if (isMatch) {
         let token = jwt.sign(
           {
@@ -22,6 +24,7 @@ exports.signin = async function(req, res, next) {
           },
           process.env.SECRET_KEY
         );
+        // return back user data + token
         return res.status(200).json({
           id,
           username,
@@ -38,6 +41,12 @@ exports.signin = async function(req, res, next) {
       return next({ status: 400, message: "Invalid Email/Password." });
     }
   };
+
+
+
+
+
+// --------------------------------------------- sign in ------------------------------------ //
 
 // create a User from the data coming in from a request
 // destructure the user's data

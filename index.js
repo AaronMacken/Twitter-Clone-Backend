@@ -34,16 +34,14 @@ try {
 });
 
 
-// express error handler
-// create an error message with a status code
-// use next to take that info to the next piece of middleware
+// if none of the above routes are reached, display this error
 app.use(function(req, res, next) {
     let err = new Error("Not Found");
     err.status = 404;
     next(err);
 });
 
-// error handler function that uses the error data from the handler function above
+// if the route was reached but there was an issue, use this errorHandler to format the error data
 app.use(errorHandler);
 
 app.listen(PORT, function() {
