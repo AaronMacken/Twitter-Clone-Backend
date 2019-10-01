@@ -10,7 +10,7 @@ exports.signin = async function(req, res, next) {
         email: req.body.email
       });
       // destructure some of the found user's data for later
-      let { id, username, profileImageUrl } = user;
+      let { id, userName, profileImageUrl } = user;
       // compare entered password with user's hashed password
       let isMatch = await user.comparePassword(req.body.password);
       // if password is correct
@@ -19,7 +19,7 @@ exports.signin = async function(req, res, next) {
         let token = jwt.sign(
           {
             id,
-            username,
+            userName,
             profileImageUrl
           },
           process.env.SECRET_KEY
@@ -27,7 +27,7 @@ exports.signin = async function(req, res, next) {
         // return back user data + token
         return res.status(200).json({
           id,
-          username,
+          userName,
           profileImageUrl,
           token
         });
